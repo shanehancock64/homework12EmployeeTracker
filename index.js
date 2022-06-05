@@ -34,7 +34,7 @@ function startApp() {
       'Add Employee',
       'View Departments',
       'View Roles',
-      'View Emplyees',
+      'View Employees',
       'Update Employee Role',
       'Exit'
     ]
@@ -73,7 +73,37 @@ function startApp() {
   if(err)throw err;
   });
 }
+// employee function
+function viewEmployees() {
+  console.log('Viewing Employees');
+
+  let sql = `SELECT 
+  employee.id, 
+  employee.first_name, 
+  employee.last_name, 
+  role.title, 
+  department.name AS department, 
+  role.salary, 
+  CONCAT(manager.first_name, ' ', manager.last_name) AS manager
+FROM employee
+LEFT JOIN role
+  ON employee.role_id = role.id
+LEFT JOIN department
+  ON department.id = role.department_id
+LEFT JOIN employee manager
+ON manager.id = employee.manager_id`
+
+db.query(sql, (err, res) => {
+  if (err) {
+    throw err
+  }
+  console.table(res);
+  startApp()
+});
+
+}
   
+  // emoployee by department function 
   
 
 
