@@ -104,8 +104,63 @@ db.query(sql, (err, res) => {
 }
   
   // emoployee by department function 
+  function viewEmployeesByDepartment(){
+    let query =
+    `SELECT 
+        department.id, 
+        department.name, 
+        role.salary
+    FROM employee
+    LEFT JOIN role 
+        ON employee.role_id = role.id
+    LEFT JOIN department
+        ON department.id = role.department_id
+    GROUP BY department.id, department.name, role.salary`;
   
+  connection.query(query,(err, res) => {
 
+      if(err) {
+        throw err;
+      }
+      const departmentChoices = res.map((choices) => ({
+          value: choices.id, name: choices.name
+      }));
+    console.table(res);
+    getDepartment(departmentChoices);
+  });
+}
+// department choices function
+function getDepartment(departmentChoices) {
+  inquirer.prompt([
+    {
+      type: 'list',
+      name: 'department',
+      message: 'Departments',
+      choices: departmentChoices
+    }
+  ]).then((res) => {
+    let sql = `SELECT 
+    employee.id, 
+    employee.first_name, 
+    employee.last_name, 
+    role.title, 
+    department.name
+FROM employee
+JOIN role
+    ON employee.role_id = role.id
+JOIN department
+    ON department.id = role.department_id
+WHERE department.id = ?`
+
+db.query(sql, res.department, (err, res) => {
+  if(err) {
+    throw err
+  }
+  startApp()
+  console.table(res);
+});
+  })
+}
 
 
 
