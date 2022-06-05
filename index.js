@@ -7,3 +7,12 @@ const db = mysql.createConnection({
   user: 'root',
   password: 'password'
 })
+
+db.connect(err => {
+  if (err) {
+    throw err;
+  }
+  console.log('Connected to mysql');
+})
+
+// create database
