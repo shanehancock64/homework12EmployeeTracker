@@ -22,6 +22,25 @@ db.query("CREATE DATABASE employeeTracker", function (err, result) {
   console.log("Database created");
 });
 
+// create employee table
+db.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected to Table!");
+  var sql = 'CREATE TABLE Employee (id INT PRIMARY KEY, first_name VARCHAR(30), last_name VARCHAR(30), role_id INT, manager_id INT)';
+  db.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("Table created");
+  });
+});
+// app.get('createemployee', (req, res) => {
+// let sql = 'CREATE TABLE Employee (id INT PRIMARY KEY, first_name VARCHAR(30), last_name VARCHAR(30), role_id INT, manager_id INT)'
+// db.query(sql, err => {
+//   if (err) {
+//     throw err
+//   }
+//   res.send('Employee Table created successfully');
+// });
+// });
 
 
 
