@@ -20,7 +20,7 @@ db.connect(err => {
   }
   console.log('Great success connected to Mysql!');
 });
-
+startApp();
 // Question Prompts inquirer
 function startApp() {
   inquirer.prompt({
@@ -35,44 +35,38 @@ function startApp() {
       'Update Employee Role',
       'Exit'
     ],
-    message: ''
+    message: 'Select from the following options:',
+    name: 'Options'
   })
+  then(function(result){
+    console.log(result.options);
+    switch (result.options) {
+      case "Add department":
+          addDepartment();
+          break;
+        case "Add role":
+          addRole();
+          break;
+        case "Add employee":
+          addEmployee();
+          break;
+        case "View departments":
+          viewDepartment();
+          break;
+        case "View roles":
+          viewRoles();
+          break;
+        case "View employees":
+          viewEmployees();
+          break;
+        case "Update employee role":
+          updateEmployee();
+          break;
+        default:
+          exit();
+    }
+  });
 }
-
-// // create database
-// app.get('/createdb', (req, res) => {
-//   let sql = "CREATE DATABASE employeeTracker"
-//   db.query(sql, function (err, result) {
-//     if (err) throw err;
-//     res.send("Database created");
-//     console.log('Database created');
-// });
-
-// });
-
-// // create employee table
-// app.get('/createemployee', (req, res) => {
-//   let sql = 'CREATE TABLE employee (id INT PRIMARY KEY, first_name VARCHAR(30), last_name VARCHAR(30), role_id INT, manager_id INT)'
-//   db.query(sql, err => {
-//     if (err) {
-//       throw err
-//     }
-//     res.send('Employee Table created successfully');
-//     console.log('Table created successfully');
-// });
-// });
-
-// // insert employee
-// app.get('/employee1', (req, res) => {
-//   let post = {first_name: 'John', last_name: 'Doe', id:1}
-//   let sql = 'INSERT INTO employee SET ?'
-//   let query = db.query(sql, post, err => {
-//     if (err) {
-//       throw err
-//     }
-//     res.send('Employee added')
-//   });
-// });
 
 
 // Port Listening
