@@ -1,4 +1,12 @@
 
+
+
+
+
+
+
+
+
 // // create database
 // app.get('/createdb', (req, res) => {
 //   let sql = "CREATE DATABASE employeeTracker"

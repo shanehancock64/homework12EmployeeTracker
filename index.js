@@ -11,7 +11,7 @@ const db = mysql.createConnection({
   port: 3001,
   user: 'root',
   password: 'password',
-  database: 'employeeTracker'
+  database: 'employee_tracker'
 })
 
 db.connect(err => {
@@ -23,8 +23,11 @@ db.connect(err => {
 startApp();
 // Question Prompts inquirer
 function startApp() {
-  inquirer.prompt({
+  inquirer.prompt([ 
+    {
     type: 'list',
+    name: 'userChoices',
+    message: 'Select from the following options:',
     choices: [
       'Add Department',
       'Add Role',
@@ -34,39 +37,46 @@ function startApp() {
       'View Emplyees',
       'Update Employee Role',
       'Exit'
-    ],
-    message: 'Select from the following options:',
-    name: 'Options'
-  })
-  then(function(result){
-    console.log(result.options);
-    switch (result.options) {
-      case "Add department":
-          addDepartment();
-          break;
-        case "Add role":
-          addRole();
-          break;
-        case "Add employee":
-          addEmployee();
-          break;
-        case "View departments":
-          viewDepartment();
-          break;
-        case "View roles":
-          viewRoles();
-          break;
-        case "View employees":
-          viewEmployees();
-          break;
-        case "Update employee role":
-          updateEmployee();
-          break;
-        default:
-          exit();
-    }
+    ]
+  }
+
+  ]).then((res) => {
+    console.log(res.userChoices);
+    switch(res.userChoice){
+      case 'View All Employees':
+        viewAllEmployees();
+        break;
+      case 'View Employees By Department':
+        viewEmployeesByDepartment();
+        break;
+      case 'Add Employee':
+        addEmployee();
+        break;
+      case 'Remove Employee':
+        removeEmployee();
+        break;
+      case 'Update Employee Role':
+        updateEmployeeRole();
+        break;
+      case 'Add Role':
+        addRole();
+        break;
+      case 'Add Department':
+        addDepartment();
+        break;
+      case 'Exit':
+        connection.end();
+        break;
+      }
+      
+    }).catch((err)=>{
+  if(err)throw err;
   });
 }
+  
+  
+
+
 
 
 // Port Listening
