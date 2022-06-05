@@ -21,7 +21,23 @@ db.connect(err => {
   console.log('Great success connected to Mysql!');
 });
 
-//
+// Question Prompts inquirer
+function startApp() {
+  inquirer.prompt({
+    type: 'list',
+    choices: [
+      'Add Department',
+      'Add Role',
+      'Add Employee',
+      'View Departments',
+      'View Roles',
+      'View Emplyees',
+      'Update Employee Role',
+      'Exit'
+    ],
+    message: ''
+  })
+}
 
 // // create database
 // app.get('/createdb', (req, res) => {
