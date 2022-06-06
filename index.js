@@ -44,7 +44,7 @@ function startApp() {
     console.log(res.userChoices);
     switch(res.userChoice){
       case 'View All Employees':
-        viewAllEmployees();
+        viewEmployees();
         break;
       case 'View Employees By Department':
         viewEmployeesByDepartment();
@@ -161,6 +161,67 @@ db.query(sql, res.department, (err, res) => {
 });
   })
 }
+// employee add function
+function addEmployee() {
+  let sql = 
+  `SELECT 
+      role.id, 
+      role.title, 
+      role.salary 
+  FROM role`
+
+  db.query(sql, (err, res) => {
+    if(err) {
+      throw err
+    }
+    const role = res.map(({ id, title, salary }) => ({
+      value: id,
+      title: `${title}`,
+      salary: `${salary}`
+    }));
+    console.table(res);
+    employeeRoles(role);
+  });
+}
+function employeeRoles(role) {
+  inquirer
+    .prompt([
+    {
+      type: "input",
+      name: "firstName",
+      message: "Employee First Name: "
+    },
+    {
+      type: "input",
+      name: "lastName",
+      message: "Employee Last Name: "
+    },
+    {
+      type: "list",
+      name: "roleId",
+      message: "Employee Role: ",
+      choices: role
+    }
+  ]).then((res)=>{
+      let sql = `INSERT INTO employee SET ?`
+      db.query(sql,{
+        first_name: res.firstName,
+        last_name: res.lastName,
+        role_id: res.roleId
+      },(err, res) => {
+        if(err){
+          throw err;
+        } 
+        startApp();
+    });
+  });
+}
+// employee removal
+
+
+
+
+
 
 
 
