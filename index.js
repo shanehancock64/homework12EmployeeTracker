@@ -217,7 +217,43 @@ function employeeRoles(role) {
   });
 }
 // employee removal
+function removeEmployee() {
+  let sql =  `SELECT
+  employee.id, 
+  employee.first_name, 
+  employee.last_name
+FROM employee`
 
+db.query(sql, (err, res) => {
+  if (err) {
+    throw err
+  }
+  const employee = res.map(({ id, first_name, last_name }) => ({
+    value: id,
+    name: `${id} ${first_name} ${last_name}`
+  }));
+  console.table(res);
+  getDelete(employee);
+})
+}
+function getDelete(employee){  
+  inquirer.prompt([
+      {
+        type: "list",
+        name: "employee",
+        message: "Employee To Be Deleted: ",
+        choices: employee
+      }
+    ]).then((res)=>{
+      let sql = `DELETE FROM employee WHERE ?`;
+      db.query(sql, { id: res.employee },(err, res) => {
+        if(err) { 
+          throw err;}
+
+        startApp();
+      });
+    });
+}
 
 
 
