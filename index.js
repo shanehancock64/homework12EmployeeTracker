@@ -189,17 +189,17 @@ function employeeRoles(role) {
     {
       type: "input",
       name: "firstName",
-      message: "Employee First Name: "
+      message: "Employee's First Name: "
     },
     {
       type: "input",
       name: "lastName",
-      message: "Employee Last Name: "
+      message: "Employee's Last Name: "
     },
     {
       type: "list",
       name: "roleId",
-      message: "Employee Role: ",
+      message: "Employee's Role: ",
       choices: role
     }
   ]).then((res)=>{
@@ -255,6 +255,85 @@ function getDelete(employee){
     });
 }
 
+// updateEmployeeRole 
+function updateEmployeeRole(){
+  let sql = `SELECT 
+                  employee.id,
+                  employee.first_name, 
+                  employee.last_name, 
+                  role.title, 
+                  department.name, 
+                  role.salary, 
+                  CONCAT(manager.first_name, ' ', manager.last_name) AS manager
+              FROM employee
+              JOIN role
+                  ON employee.role_id = role.id
+              JOIN department
+                  ON department.id = role.department_id
+              JOIN employee manager
+                  ON manager.id = employee.manager_id`
+
+  db.query(sql,(err, res) => {
+    if(err){
+      throw err;
+    }
+    const employee = res.map(({ id, first_name, last_name }) => ({
+      value: id,
+       name: `${first_name} ${last_name}`      
+    }));
+    console.table(res);
+    updateRole(employee);
+  });
+}
+
+function updateRole(employee){
+let sql = 
+`SELECT 
+  role.id, 
+  role.title, 
+  role.salary 
+FROM role`
+
+db.query(sql,(err, res) => {
+  if(err){
+    throw err;
+  }
+  let roleChoices = res.map(({ id, title, salary }) => ({
+    value: id, 
+    title: `${title}`, 
+    salary: `${salary}`      
+  }));
+  console.table(res);
+  getUpdatedRole(employee, roleChoices);
+});
+}
+function getUpdatedRole(employee, roleChoices) {
+  inquirer.prompt([
+      {
+        type: "list",
+        name: "employee",
+        message: `Which employee do you want to update?: `,
+        choices: employee
+      },
+      {
+        type: "list",
+        name: "role",
+        message: "Select the New Role: ",
+        choices: roleChoices
+      },
+
+    ]).then((res)=>{
+      let sql = `UPDATE employee SET role_id = ? WHERE id = ?`
+      db.query(sql,[ res.role, res.employee],(err, res) => {
+          if(err){
+            throw err;
+          }
+          startApp();
+        });
+    });
+}
+
+// adding role 
 
 
 
