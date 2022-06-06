@@ -8,7 +8,6 @@ const inquirer = require('inquirer');
 //connection 
 const db = mysql.createConnection({
   host: 'localhost',
-  port: 3001,
   user: 'root',
   password: 'password',
   database: 'employee_tracker'
@@ -18,9 +17,10 @@ db.connect(err => {
   if (err) {
     throw err;
   }
+  startApp();
   console.log('Great success connected to Mysql!');
 });
-startApp();
+
 // Question Prompts inquirer
 function startApp() {
   inquirer.prompt([ 
